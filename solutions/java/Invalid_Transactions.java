@@ -1,72 +1,50 @@
 import java.util.*;
 
 class Solution {
-
-    static class Transaction {
-        String name;
-        int time;
-        int amount;
-        String city;
-        String original;
-        boolean invalid;
-
-        Transaction(String name, int time, int amount, String city, String original) {
-            this.name = name;
-            this.time = time;
-            this.amount = amount;
-            this.city = city;
-            this.original = original;
-            this.invalid = false;
-        }
-    }
-
     public List<String> invalidTransactions(String[] transactions) {
-        List<Transaction> list = new ArrayList<>();
+        int n = transactions.length;
+        boolean[] invalid = new boolean[n];
 
-        // Step 1: Parse all transactions
-        for (String t : transactions) {
-            String[] parts = t.split(",");
-            list.add(new Transaction(parts[0], Integer.parseInt(parts[1]), 
-                                     Integer.parseInt(parts[2]), parts[3], t));
+        // Step 1: Split all transactions into parts for easy comparison
+        String[][] data = new String[n][4];
+        for (int i = 0; i < n; i++) {
+            data[i] = transactions[i].split(",");
         }
 
-        // Step 2: Group by name
-        Map<String, List<Transaction>> map = new HashMap<>();
-        for (Transaction tr : list) {
-            map.computeIfAbsent(tr.name, k -> new ArrayList<>()).add(tr);
-        }
+        // Step 2: Check each transaction for invalid conditions
+        for (int i = 0; i < n; i++) {
+            String name1 = data[i][0];
+            int time1 = Integer.parseInt(data[i][1]);
+            int amount1 = Integer.parseInt(data[i][2]);
+            String city1 = data[i][3];
 
-        // Step 3: Check invalid conditions within each name
-        for (List<Transaction> group : map.values()) {
-            // Sort transactions by time
-            group.sort(Comparator.comparingInt(t -> t.time));
-            int n = group.size();
+            // Rule 1: Amount greater than 1000
+            if (amount1 > 1000) {
+                invalid[i] = true;
+            }
 
-            for (int i = 0; i < n; i++) {
-                Transaction t1 = group.get(i);
+            // Rule 2: Compare with every other transaction
+            for (int j = 0; j < n; j++) {
+                if (i == j) continue;
 
-                // Rule 1: amount > 1000
-                if (t1.amount > 1000) {
-                    t1.invalid = true;
-                }
+                String name2 = data[j][0];
+                int time2 = Integer.parseInt(data[j][1]);
+                String city2 = data[j][3];
 
-                // Rule 2: Compare only forward transactions within 60 mins
-                for (int j = i + 1; j < n; j++) {
-                    Transaction t2 = group.get(j);
-                    if (t2.time - t1.time > 60) break; // stop if time difference > 60
-
-                    if (!t1.city.equals(t2.city)) {
-                        t1.invalid = true;
-                        t2.invalid = true;
-                    }
+                // Same name, within 60 minutes, different city
+                if (name1.equals(name2) && Math.abs(time1 - time2) <= 60 && !city1.equals(city2)) {
+                    invalid[i] = true;
+                    invalid[j] = true;
                 }
             }
         }
 
-        // Step 4: Collect invalid transactions
+        // Step 3: Collect invalid transactions
         List<String> result = new ArrayList<>();
-        for (Transaction tr : list) {
-            if (tr.invalid) result.add(tr.original);
+        for (int i = 0; i < n; i++) {
+            if (invalid[i]) {
+                result.add(transactions[i]);
+            }
         }
 
         return result;
