@@ -1,3 +1,5 @@
+//Timelimit exceed
+
 // class Solution {
 //     public int maxRepeating(String sequence, String word) {
 //         int n=sequence.length();
@@ -15,6 +17,8 @@
 //     }
 // }
 
+
+//one testcase didn't pass
 
 // class Solution {
 //     public int maxRepeating(String sequence, String word) {
@@ -35,6 +39,8 @@
 //         return maxCount;
 //     }
 // }
+
+
 
 class Solution {
     public int maxRepeating(String sequence, String word) {
