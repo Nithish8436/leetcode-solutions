@@ -1,37 +1,42 @@
 class Solution {
     public int countCoveredBuildings(int n, int[][] buildings) {
-        Map<Integer, TreeSet<Integer>> rowMap = new HashMap<>();
-        Map<Integer, TreeSet<Integer>> colMap = new HashMap<>();
+        int m = buildings.length;
 
-        // Fill row and column maps
+        // Store min and max Y for each row
+        int[] minY = new int[n + 1];
+        int[] maxY = new int[n + 1];
+
+        // Store min and max X for each column
+        int[] minX = new int[n + 1];
+        int[] maxX = new int[n + 1];
+
+        // Initialize arrays
+        Arrays.fill(minY, Integer.MAX_VALUE);
+        Arrays.fill(minX, Integer.MAX_VALUE);
+
+        // Step 1: Compute min/max in each row and column
         for (int[] b : buildings) {
             int x = b[0], y = b[1];
 
-            rowMap.computeIfAbsent(x, k -> new TreeSet<>()).add(y);
-            colMap.computeIfAbsent(y, k -> new TreeSet<>()).add(x);
+            minY[x] = Math.min(minY[x], y);
+            maxY[x] = Math.max(maxY[x], y);
+
+            minX[y] = Math.min(minX[y], x);
+            maxX[y] = Math.max(maxX[y], x);
         }
 
         int covered = 0;
 
+        // Step 2: Check conditions for each building
         for (int[] b : buildings) {
             int x = b[0], y = b[1];
 
-            TreeSet<Integer> row = rowMap.get(x);
-            TreeSet<Integer> col = colMap.get(y);
+            boolean left  = minY[x] < y;
+            boolean right = maxY[x] > y;
+            boolean above = minX[y] < x;
+            boolean below = maxX[y] > x;
 
-            // Check left: y2 < y
-            Integer left = row.lower(y);
-
-            // Check right: y2 > y
-            Integer right = row.higher(y);
-
-            // Check above: x2 < x
-            Integer above = col.lower(x);
-
-            // Check below: x2 > x
-            Integer below = col.higher(x);
-
-            if (left != null && right != null && above != null && below != null) {
+            if (left && right && above && below) {
                 covered++;
             }
         }
