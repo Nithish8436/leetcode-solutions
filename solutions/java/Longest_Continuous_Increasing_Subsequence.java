@@ -1,0 +1,23 @@
+class Solution {
+    public int findLengthOfLCIS(int[] nums) {
+        int n=nums.length;
+
+        if(n<2) return n;
+
+        int count=1;
+        int max=1;
+
+        for(int i=1;i<n;i++)    //we start with second value
+        {
+            if(nums[i]>nums[i-1])  //check current value vs previoys valye
+            { 
+                if(++count>max) max=count; //it is update the max immediality
+            }
+            else
+             count=1;     //reset
+
+            // max=Math.max(max,count);   //use the max to store the longest count
+        }
+        return max;
+    }
+}
