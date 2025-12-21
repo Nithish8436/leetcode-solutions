@@ -11,7 +11,7 @@ class Solution {
         {
             if(nums[i]>nums[i-1])  //check current value vs previoys valye
             { 
-                if(++count>max) max=count; //it is update the max immediality
+                if(++count>max) max=count;
             }
             else
              count=1;     //reset
