@@ -2,7 +2,7 @@ class Solution {
     public int findLengthOfLCIS(int[] nums) {
         int n=nums.length;
 
-        if(n==0) return 0;
+        if(n<2) return n;
 
         int count=1;
         int max=1;
@@ -11,12 +11,12 @@ class Solution {
         {
             if(nums[i]>nums[i-1])  //check current value vs previoys valye
             { 
-                count++;
+                if(++count>max) max=count; //it is update the max immediality
             }
             else
              count=1;     //reset
 
-            max=Math.max(max,count);   //use the max to store the longest count
+            // max=Math.max(max,count);   //use the max to store the longest count
         }
         return max;
     }
