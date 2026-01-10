@@ -3,33 +3,32 @@ class Solution {
         int m = s1.length();
         int n = s2.length();
 
-        int[] dp = new int[n + 1];
+        int[][] dp = new int[m + 1][n + 1];
+
+        // Base case: s2 is empty
+        for (int i = 1; i <= m; i++) {
+            dp[i][0] = dp[i - 1][0] + s1.charAt(i - 1);
+        }
 
         // Base case: s1 is empty
         for (int j = 1; j <= n; j++) {
-            dp[j] = dp[j - 1] + s2.charAt(j - 1);
+            dp[0][j] = dp[0][j - 1] + s2.charAt(j - 1);
         }
 
+        // Fill DP table
         for (int i = 1; i <= m; i++) {
-            int prevDiagonal = dp[0];   // dp[i-1][0]
-            dp[0] += s1.charAt(i - 1); // base case: s2 empty
-
             for (int j = 1; j <= n; j++) {
-                int temp = dp[j]; // store old dp[i-1][j]
-
                 if (s1.charAt(i - 1) == s2.charAt(j - 1)) {
-                    dp[j] = prevDiagonal;
+                    dp[i][j] = dp[i - 1][j - 1];
                 } else {
-                    dp[j] = Math.min(
-                        dp[j] + s1.charAt(i - 1),      // delete from s1
-                        dp[j - 1] + s2.charAt(j - 1)   // delete from s2
+                    dp[i][j] = Math.min(
+                        dp[i - 1][j] + s1.charAt(i - 1),
+                        dp[i][j - 1] + s2.charAt(j - 1)
                     );
                 }
-
-                prevDiagonal = temp;
             }
         }
 
-        return dp[n];
+        return dp[m][n];
     }
 }
