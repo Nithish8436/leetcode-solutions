@@ -1,23 +1,19 @@
 class Solution {
     public boolean repeatedSubstringPattern(String s) {
-        int n=s.length();
+        int n = s.length();
 
-        for(int len=1;len<=n/2;len++)
-        {
-            if(n%len!=0) continue;
+        for (int len = 1; len <= n / 2; len++) {
+            if (n % len != 0) continue;
 
-            String sub=s.substring(0,len);
-
-            String repeated="";
-
-            for(int i=0;i<n/len;i++)
-            {
-                repeated=repeated+sub;
+            boolean match = true;
+            for (int i = len; i < n; i++) {
+                if (s.charAt(i) != s.charAt(i % len)) {
+                    match = false;
+                    break;
+                }
             }
-
-            if(repeated.equals(s)) return true;
+            if (match) return true;
         }
-
         return false;
     }
 }
